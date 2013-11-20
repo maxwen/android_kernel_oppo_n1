@@ -108,7 +108,7 @@ static int msm_fb_detect_panel(const char *name)
 {
     /* OPPO 2012-07-24 zhengzk Modify for MIPI start */
 
-    /*if(get_pcb_version() >= PCB_VERSION_EVT_N1)
+    if(get_pcb_version() >= PCB_VERSION_EVT_N1)
     {
 
         if (!strncmp(name, MIPI_CMD_ORISE_720P_PANEL_NAME,
@@ -117,7 +117,7 @@ static int msm_fb_detect_panel(const char *name)
             return 0;
     }
 
-    else*/
+    else
     {
         if (!strncmp(name, MIPI_VIDEO_ORISE_720P_PANEL_NAME,
                      strnlen(MIPI_VIDEO_ORISE_720P_PANEL_NAME,
