@@ -408,30 +408,56 @@ static ssize_t sim_status_store(struct kobject *kobj, struct kobj_attribute *att
 
 
 struct kobj_attribute pininfo_attr = {
-    .attr = {"pin_info", 0660},
-	
+/* OPPO 2013-08-16 zhaokai Add begin for CTS android.permission test*/
+#ifdef OPPO_CTS
+.attr = {"pin_info", 0660},
+#else
+.attr = {"pin_info", 0777},
+#endif
+/* OPPO 2013-08-16 zhaokai Add end for CTS android.permission test*/
+    
     .show = &pininfo_show,
     .store = &pininfo_store
 };
 
 
 struct kobj_attribute modem_reset_count_attr = {
-    .attr = {"modem_reset_count", 0660},
+/* OPPO 2013-08-16 zhaokai Add begin for CTS android.permission test*/
+#ifdef OPPO_CTS
+.attr = {"modem_reset_count", 0660},
+#else
+.attr = {"modem_reset_count", 0777},
+#endif
+/* OPPO 2013-08-16 zhaokai Add end for CTS android.permission test*/
+    
 	
     .show = &modem_reset_count_show,
     .store = &modem_reset_count_store,
 };
 
 struct kobj_attribute need_pin_process_flag_attr = {
-    .attr = {"need_pin_process_flag", 0660},
+/* OPPO 2013-08-16 zhaokai Add begin for CTS android.permission test*/
+#ifdef OPPO_CTS
+ .attr = {"need_pin_process_flag", 0660},
+#else
+ .attr = {"need_pin_process_flag", 0777},
+#endif
+/* OPPO 2013-08-16 zhaokai Add end for CTS android.permission test*/
+   
 	
     .show = &need_pin_process_flag_show,
     .store = &need_pin_process_flag_store,
 };
 
 struct kobj_attribute sim_status_attr = {
-    .attr = {"sim_status", 0660},
-	
+/* OPPO 2013-08-16 zhaokai Add begin for CTS android.permission test*/
+#ifdef OPPO_CTS
+.attr = {"sim_status", 0660},
+#else
+.attr = {"sim_status", 0777},
+#endif
+/* OPPO 2013-08-16 zhaokai Add end for CTS android.permission test*/
+    
     .show = &sim_status_show,
     .store = &sim_status_store,
 };

@@ -71,6 +71,9 @@ VREG_CONSUMERS(L8) = {
 	REGULATOR_SUPPLY("cam_vana",		"0-0010"),//s5k6a3yx
 	REGULATOR_SUPPLY("cam_vana",		"7-0010"),//s5k6a3yx
 /* OPPO 2013-02-04 kangjian add end */
+	/* OPPO 2013-07-24 lanhe Add for m9mo start */
+	REGULATOR_SUPPLY("cam_vaf",     	"7-003e"),
+	/* OPPO 2013-07-24 lanhe Add end */
 };
 VREG_CONSUMERS(L9) = {
 	REGULATOR_SUPPLY("8921_l9",		NULL),
@@ -164,6 +167,9 @@ VREG_CONSUMERS(L28) = {
 	REGULATOR_SUPPLY("core_vdd",		"pil_qdsp6v4.1"),
 /* OPPO 2013-02-04 kangjian added begin for camera */	
 	REGULATOR_SUPPLY("cam_vdig",        "4-0010"),
+	/* OPPO 2013-07-24 lanhe Add for m9mo start */
+   	REGULATOR_SUPPLY("cam_vdig",		"7-003e"),
+   	/* OPPO 2013-07-24 lanhe Add end */
 /* OPPO 2013-02-04 kangjian added end for camera */	
 };
 VREG_CONSUMERS(L29) = {
@@ -238,6 +244,9 @@ VREG_CONSUMERS(LVS5) = {
 	REGULATOR_SUPPLY("cam_vio",		"4-0030"),
 	REGULATOR_SUPPLY("cam_vio",		"0-0010"),//s5k6a3yx
 	REGULATOR_SUPPLY("cam_vio",		"7-0010"),//s5k6a3yx
+	/* OPPO 2013-07-24 lanhe Add for m9mo start */
+	REGULATOR_SUPPLY("cam_vio",		"7-003e"),//m9mo
+	/* OPPO 2013-07-24 lanhe Add end */
 /* OPPO 2013-02-04 kangjian add end */
 };
 VREG_CONSUMERS(LVS6) = {
@@ -624,7 +633,14 @@ msm8064_pm8921_regulator_pdata[] __devinitdata = {
 
 	/*           ID        name     always_on pd       en_t supply reg_ID */
 	PM8XXX_VS300(USB_OTG,  "8921_usb_otg",  0, 0,         0, "ext_5v", 2),
+	
+/* OPPO 2013-08-09 liuhd modify begin for sleep current */
+#ifdef CONFIG_VENDOR_EDIT
+	PM8XXX_VS300(HDMI_MVS, "8921_hdmi_mvs", 0, 0,         0, "ext_5v", 3),
+#else
 	PM8XXX_VS300(HDMI_MVS, "8921_hdmi_mvs", 0, 1,         0, "ext_5v", 3),
+#endif
+/* OPPO 2013-08-09 liuhd modify end */
 };
 
 /* PM8917 regulator constraints */
@@ -673,7 +689,7 @@ apq8064_rpm_regulator_init_data[] __devinitdata = {
 	/*	ID a_on pd ss min_uV   max_uV   supply    sys_uA init_ip */
 	RPM_LDO(L1,  1, 1, 0, 1100000, 1100000, "8921_s4",     0,  1000),
 	RPM_LDO(L2,  0, 1, 0, 1200000, 1200000, "8921_s4",     0,     0),
-	RPM_LDO(L3,  0, 1, 0, 3075000, 3075000, NULL,          0,     0),
+	RPM_LDO(L3,  0, 1, 0, 3075000, 3300000, NULL,          0,     0),
 	RPM_LDO(L4,  1, 1, 0, 1800000, 1800000, NULL,          0, 10000),
 	RPM_LDO(L5,  0, 1, 0, 2950000, 2950000, NULL,          0,     0),
 	RPM_LDO(L6,  0, 1, 0, 2950000, 2950000, NULL,          0,     0),
@@ -813,6 +829,19 @@ void __init configure_apq8064_pm8917_power_grid(void)
 			rpm_data->init_data.num_consumer_supplies
 				= ARRAY_SIZE(vreg_consumers_8917_S1);
 		}
+
+		/*
+		 * Currently min/max voltage level for LD03 was set to 3.075V.
+		 * But some Full speed USB headsets requires higher cross over
+		 * voltage. The cross over voltage is directly proportional
+		 * to the phy 3.3V rail voltage. So modified the max voltage
+		 * level of LD03 to 3.3V. But apq8064_rpm_regulator_init_data
+		 * is shared between PM8921 and PM8917, so set max_uV back to
+		 * 3.075V for PM8917.
+		 */
+		 if (rpm_data->id == RPM_VREG_ID_PM8921_L3)
+			rpm_data->init_data.constraints.max_uV = 3075000;
+
 	}
 
 	/*
