@@ -1032,34 +1032,35 @@ struct msm_snapshot_pp_status {
 #define CFG_SET_VISION_MODE           55
 #define CFG_SET_VISION_AE             56
 #define CFG_HDR_UPDATE                57
-#define CFG_ACTUAOTOR_REG_INIT        58
 
 /* OPPO 2013-07-24 lanhe Add for m9mo start */
 #if 0
+#define CFG_ACTUAOTOR_REG_INIT        58
 #define CFG_MAX                       59
 #else
-#define CFG_SET_AF_MODE			  59
-#define CFG_SET_AE_MODE           60
-#define CFG_SET_FLASH_MODE        61
-#define CFG_SET_AF_AREA           62
-#define CFG_SET_AE_AREA           63
-#define CFG_GET_AF_STATE          64
-#define CFG_GET_FLASH_STATE       65
-#define CFG_FRAME_NOTIFICATION    66
-#define CFG_SET_SCENE_MODE		  67
-#define CFG_SET_ASD_ENABLE		  68
-#define CFG_SET_SLOW_SHUTTER	  69
-#define CFG_SET_HDR_ENABLE	  	  70
-#define CFG_SET_ORIENTATION		  71
-#define CFG_GET_AUTO_ISO_VALUE	  72
-#define CFG_GET_EXPOSURE_TIME	  73
-#define CFG_SET_FD_INFO     	  74
-#define CFG_GET_SCENE_MODE        75    
-#define CFG_SET_SPORT_MODE        76
-#define CFG_SET_AE_LOCK			  77
-#define CFG_SET_AWB_LOCK		  78
-#define CFG_SET_CAF_RESULT		  79
-#define CFG_GET_FLASH_INFO	  	  80
+#define CFG_SET_AF_MODE			  58
+#define CFG_SET_AE_MODE           59
+#define CFG_SET_FLASH_MODE        60
+#define CFG_SET_AF_AREA           61
+#define CFG_SET_AE_AREA           62
+#define CFG_GET_AF_STATE          63
+#define CFG_GET_FLASH_STATE       64
+#define CFG_FRAME_NOTIFICATION    65
+#define CFG_SET_SCENE_MODE		  66
+#define CFG_SET_ASD_ENABLE		  67
+#define CFG_SET_SLOW_SHUTTER	  68
+#define CFG_SET_HDR_ENABLE	  	  69
+#define CFG_SET_ORIENTATION		  70
+#define CFG_GET_AUTO_ISO_VALUE	  71
+#define CFG_GET_EXPOSURE_TIME	  72
+#define CFG_SET_FD_INFO     	  73
+#define CFG_GET_SCENE_MODE        74    
+#define CFG_SET_SPORT_MODE        75
+#define CFG_SET_AE_LOCK			  76
+#define CFG_SET_AWB_LOCK		  77
+#define CFG_SET_CAF_RESULT		  78
+#define CFG_GET_FLASH_INFO	  	  79
+#define CFG_ACTUAOTOR_REG_INIT    80
 #define CFG_MAX                   81
 #endif
 /* OPPO 2013-07-24 lanhe Add end */
