@@ -22,7 +22,7 @@
 #include <mach/vreg.h>
 #include <linux/i2c/ssl3252.h>
 /* OPPO 2013-02-04 kangjian added end */
-/* OPPO 2013-10-12 ranfei Add begin for 禄帽脠隆脫虏录镁掳忙卤戮潞脜 */
+/* OPPO 2013-10-12 ranfei Add begin for 获取硬件版本号 */
 #ifdef CONFIG_VENDOR_EDIT
 #include <linux/pcb_version.h>
 extern int get_pcb_version(void);
@@ -1851,10 +1851,11 @@ int32_t msm_sensor_power(struct v4l2_subdev *sd, int on)
 	struct msm_sensor_ctrl_t *s_ctrl = get_sctrl(sd);
 	mutex_lock(s_ctrl->msm_sensor_mutex);
 	if (on) {
-		if(s_ctrl->sensor_state == MSM_SENSOR_POWER_UP) {
-			pr_err("%s: sensor already in power up state\n", __func__);
+		if(s_ctrl->sensor_state == MSM_SENSOR_POWER_UP) {/*OPPO*/
+			pr_err("%s: %s is already power up\n",__func__,
+				s_ctrl->sensordata->sensor_name);			
 			mutex_unlock(s_ctrl->msm_sensor_mutex);
-			return -EINVAL;
+			return 0;
 		}
 		rc = s_ctrl->func_tbl->sensor_power_up(s_ctrl);
 		if (rc < 0) {
@@ -1876,20 +1877,19 @@ int32_t msm_sensor_power(struct v4l2_subdev *sd, int on)
 					__func__,
 					s_ctrl->sensordata->sensor_name);
 				s_ctrl->sensor_state = MSM_SENSOR_POWER_DOWN;
-				goto power_up_failed;
 			}
 			s_ctrl->sensor_state = MSM_SENSOR_POWER_UP;
 		}
 	} else {
-		if(s_ctrl->sensor_state == MSM_SENSOR_POWER_DOWN) {
-			pr_err("%s: sensor already in power down state\n",__func__);
+		if(s_ctrl->sensor_state == MSM_SENSOR_POWER_DOWN) {/*OPPO*/
+			pr_err("%s: %s is already power down\n",__func__,
+				s_ctrl->sensordata->sensor_name);			
 			mutex_unlock(s_ctrl->msm_sensor_mutex);
-			return -EINVAL;
+			return 0;
 		}
 		rc = s_ctrl->func_tbl->sensor_power_down(s_ctrl);
 		s_ctrl->sensor_state = MSM_SENSOR_POWER_DOWN;
 	}
-power_up_failed:
 	mutex_unlock(s_ctrl->msm_sensor_mutex);
 	return rc;
 }
@@ -2057,7 +2057,7 @@ int32_t s5k6a3yx_sensor_power_up(struct msm_sensor_ctrl_t *s_ctrl)
 		goto enable_vreg_failed;
 	}
   #else
-/* OPPO 2013-10-12 ranfei Modify begin for N1脡脧脙忙碌莽脭麓脪脩戮颅赂眉赂脛 */
+/* OPPO 2013-10-12 ranfei Modify begin for N1上面电源已经更改 */
 #if 0
  	// for old GSBI1's voltage
 	ldo21 = regulator_get(NULL, "8921_l21");

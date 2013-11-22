@@ -48,8 +48,7 @@ const char *hw_platform[] = {
 	[HW_PLATFORM_SVLTE_SURF] = "SLVTE_SURF",
 	[HW_PLATFORM_MTP] = "MTP",
 	[HW_PLATFORM_LIQUID] = "Liquid",
-	[HW_PLATFORM_DRAGON] = "Dragon",
-	[HW_PLATFORM_QRD] = "QRD",
+	[HW_PLATFORM_DRAGON] = "Dragon"
 };
 
 enum {
@@ -344,18 +343,21 @@ char * socinfo_get_hw_pcb_version(void)
 		case PCB_VERSION_EVT_TD:
 		case PCB_VERSION_EVT_N1:
 		case PCB_VERSION_EVT_N1F:
+		case PCB_VERSION_EVT_N1W:	
 			hw_version = "EVT";
 			break;
 		case PCB_VERSION_DVT:
 		case PCB_VERSION_DVT_TD:
 		case PCB_VERSION_DVT_N1F:
 		case PCB_VERSION_DVT_N1T:
+		case PCB_VERSION_DVT_N1W:	
 			hw_version = "DVT";
 			break;
 		case PCB_VERSION_PVT:
 		case PCB_VERSION_PVT_TD:
 		case PCB_VERSION_PVT_N1F:
 		case PCB_VERSION_PVT_N1T:
+		case PCB_VERSION_PVT_N1W:	
 			hw_version = "PVT";
 			break;
 		case PCB_VERSION_PVT2_TD:
@@ -386,6 +388,8 @@ char *socinfo_get_hw_rf_version(void)
 		rf_version = "N1T";
 	}else if((get_pcb_version() >= PCB_VERSION_EVT_N1F) &&(get_pcb_version() <= PCB_VERSION_PVT_N1F)){
 		rf_version = "N1";
+	} else if((get_pcb_version() >= PCB_VERSION_EVT_N1W) &&(get_pcb_version() <= PCB_VERSION_PVT_N1W)){
+		rf_version = "N1W";
 	}
 
 	return rf_version;

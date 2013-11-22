@@ -1960,6 +1960,7 @@ int32_t imx135_write_exp_gain(struct msm_sensor_ctrl_t *s_ctrl,
 	if (line > (fl_lines - offset))
 		fl_lines = line + offset;
 	CDBG("%s luma_avg=%d\n", __func__, luma_avg);
+
 	if (s_ctrl->curr_res == MSM_SENSOR_RES_5) { /*OPPO*/
 		luma_delta = fgain;
 		fgain = Q8*256/(256-gain);
