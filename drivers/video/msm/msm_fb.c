@@ -335,10 +335,8 @@ static void msm_fb_set_bl_brightness(struct led_classdev *led_cdev,
 			MAX_BACKLIGHT_BRIGHTNESS - 1) /
 			(MAX_BACKLIGHT_BRIGHTNESS - 1) / 2;
 #else
-        //Neal
         if(get_pcb_version() >= PCB_VERSION_EVT_N1)
         {
-            pr_info("%s: %d", __func__, value);
         	bl_lvl = value; 
         }
         else

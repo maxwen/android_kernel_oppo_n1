@@ -75,7 +75,7 @@
 #define USB_PHY_VDD_DIG_VOL_MAX	1320000 /* uV */
 
 /* OPPO 2012-08-08 chendx Add begin for reason */
-#define USB_NONSTANDARD_DET_DELAY	msecs_to_jiffies(1650)//(1500) sjc0925 modify to 1650
+#define USB_NONSTANDARD_DET_DELAY	msecs_to_jiffies(2350)
 
 static int cancel_nonstandard_worker = 0;
 /* OPPO 2012-08-08 chendx Add end */
@@ -118,9 +118,13 @@ static struct power_supply *psy;
 
 static bool aca_id_turned_on;
 
+/* OPPO 2013-11-16 sjc Delete begin for reason */
+#if 0
 /* OPPO 2012-08-13 chendx Add begin for chg detect */
 struct completion chg_detect_wait;
 /* OPPO 2012-08-13 chendx Add end */
+#endif
+/* OPPO 2013-11-16 sjc Delete end */
 
 static inline bool aca_enabled(void)
 {
@@ -2273,6 +2277,8 @@ static void nonstandard_detect_work(struct work_struct *w)
 
 	if(false == is_nonstandard_worker_canceled()) 
 	{
+/* OPPO 2013-11-16 sjc Delete begin for reason */
+#if 0
 		/* OPPO 2012-08-13 chendx Add begin for wait hdmi irq  */
         if (!wait_for_completion_timeout(&chg_detect_wait,
 			 msecs_to_jiffies(700))){
@@ -2282,6 +2288,8 @@ static void nonstandard_detect_work(struct work_struct *w)
               pr_info("waiting for HDMI IRQ\n");
               motg->chg_type = USB_HDMI_CHARGER;
          }
+#endif
+/* OPPO 2013-11-16 sjc Delete end */
 
 /* OPPO 2013-10-30 sjc Add begin for DCP NON-DCP detect again */
 	line_status = readl_relaxed(USB_PORTSC);
@@ -2290,8 +2298,10 @@ static void nonstandard_detect_work(struct work_struct *w)
 		pr_info("%s:DCP\n", __func__);
 		motg->chg_type = USB_DCP_CHARGER;
 	} else if ((line_status & PORTSC_LS) == PORTSC_LS_NON) {
-		pr_info("%s:NON-DCP\n", __func__);
-		motg->chg_type = USB_NON_DCP_CHARGER;
+		if (motg->chg_type != USB_SDP_CHARGER) {
+			pr_info("%s:NON-DCP\n", __func__);
+			motg->chg_type = USB_NON_DCP_CHARGER;
+		}
 	}
 /* OPPO 2013-10-30 sjc Add end */
 
@@ -4006,9 +4016,13 @@ static int __init msm_otg_probe(struct platform_device *pdev)
 		dev_dbg(&pdev->dev, "mode debugfs file is"
 			"not available\n");
 
+/* OPPO 2013-11-16 sjc Delete begin for reason */
+#if 0
 	/* OPPO 2012-08-13 chendx Add begin for reason */
 	init_completion(&chg_detect_wait);
 	/* OPPO 2012-08-13 chendx Add end */
+#endif
+/* OPPO 2013-11-16 sjc Delete end */
 
 	if (motg->pdata->otg_control == OTG_PMIC_CONTROL)
 		pm8921_charger_register_vbus_sn(&msm_otg_set_vbus_state);

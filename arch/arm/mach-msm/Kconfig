@@ -2659,6 +2659,16 @@ config MODEM_ERR_ENTER_RAMDUMP
 # add by zhenwx end 
 
 # add by chendx start
+
+#ifdef VENDOR_EDIT 
+#Wangjc@OnlineRd.Driver, 2013/10/23, Add for kernel OPPO_DEVICE_IFNO macro
+config OPPO_DEVICE_IFNO
+	bool "config oppo device info"
+	default n
+	help 
+	  This is the oppo device info show function, open it will enable the function.
+#endif /* VENDOR_EDIT */
+
 config CONFIG_OPPO_DEBUG_ASSERT
 	bool "CONFIG_OPPO_DEBUG_ASSERT"
     default y

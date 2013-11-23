@@ -34,7 +34,6 @@
 #define WCNSS_PIL_DEVICE "wcnss"
 /* OPPO 2013-11-15 liuhd Add begin for wifi bt version */
 #ifdef CONFIG_VENDOR_EDIT
-int wcnss_cold_boot_done(void);
 #include <mach/device_info.h>
 #endif //CONFIG_VENDOR_EDIT
 /* OPPO 2013-11-15 liuhd Add end */

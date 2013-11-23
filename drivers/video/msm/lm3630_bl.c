@@ -21,6 +21,9 @@
 #include <linux/err.h>
 #include <linux/i2c/lm3630_bl.h>
 #include <mach/board.h>
+#include <mach/device_info.h>
+
+
 
 
 #define LM3630_DRV_NAME "lm3630"
@@ -30,6 +33,8 @@
 #define LM3630_PWM_TEST     0x1d
 #define LM3630_PWM_OFF      0x18
 
+static char *DEVICE_VERSION = "3630";
+static char *DEVICE_MANUFACUTRE = "ti";
 static bool sleep_mode = true;
 static bool backlight_pwm_state_change = false;
 
@@ -188,19 +193,19 @@ int lm3630_bkl_control(unsigned char bkl_level)
         rc = lm3630_i2c_write(0x03, 0x00);
         rc = lm3630_i2c_write(0x00, 0x9f);
         sleep_mode = true;
-        pr_info("%s: Neal lm3630_client sleep rc = %d\n", __func__,rc);
+        pr_debug("%s: Neal lm3630_client sleep rc = %d\n", __func__,rc);
         return rc;
     }
 
     if(sleep_mode == true)
     {
-        pr_info("%s Neal backlight IC weke up.\n",__func__);
+        pr_debug("%s Neal backlight IC weke up.\n",__func__);
         rc = lm3630_i2c_write(0x00, 0x1f);
         sleep_mode= false;
         mdelay(10);
     }
     rc = lm3630_i2c_write(0x03, bkl_level);
-    pr_info("%s: Neal lm3630_client set bkl level = %d, read level after write = %d ,rc = %d\n", __func__,(int)bkl_level,lm3630_bkl_readout(),rc);
+    pr_debug("%s: Neal lm3630_client set bkl level = %d, read level after write = %d ,rc = %d\n", __func__,(int)bkl_level,lm3630_bkl_readout(),rc);
 
     /* OPPO 2013-10-28 gousj Add begin for pwm flicker */
 #ifdef CONFIG_VENDOR_EDIT
@@ -229,7 +234,7 @@ int lm3630_bkl_readout(void)
     unsigned char bkl_level = 0;
     rc = lm3630_i2c_read(0x03,&bkl_level);
     rc = bkl_level;
-    pr_info("%s Neal bkl read out = %d\n",__func__,(int)rc);
+    pr_debug("%s Neal bkl read out = %d\n",__func__,(int)rc);
 #endif
     return rc;
 }
@@ -240,7 +245,7 @@ int lm3630_pwm_readout(void)
     unsigned char bkl_level = 0;
     rc = lm3630_i2c_read(0x01,&bkl_level);
     rc = bkl_level;
-    pr_info("%s Neal pwm read out = %d\n",__func__,(int)rc);
+    pr_debug("%s Neal pwm read out = %d\n",__func__,(int)rc);
     return rc;
 }
 
@@ -248,7 +253,13 @@ int lm3630_pwm_readout(void)
 static int lm3630_i2c_probe(struct i2c_client *client, const struct i2c_device_id *id)
 {
     int rc = 0;
-    pr_info("%s: Neal backlight prob.\n", __func__);
+    pr_debug("%s: Neal backlight prob.\n", __func__);
+
+/* OPPO 2013-11-13 gousj Add begin for device information */
+#ifdef CONFIG_VENDOR_EDIT
+	register_device_proc("backlight", DEVICE_VERSION, DEVICE_MANUFACUTRE);
+#endif
+/* OPPO 2013-11-13 gousj Add end */
 
     if (!i2c_check_functionality(client->adapter, I2C_FUNC_I2C))
     {
@@ -318,7 +329,7 @@ static int lm3630_suspend(struct i2c_client *client, pm_message_t mesg)
 {
     int rc ;
 
-    pr_info("%s: Neal backlight suspend.\n", __func__);
+    pr_debug("%s: Neal backlight suspend.\n", __func__);
     rc = gpio_direction_output(LM3630_ENABLE_GPIO, 0);
     if (rc)
     {
@@ -331,7 +342,7 @@ static int lm3630_suspend(struct i2c_client *client, pm_message_t mesg)
 static int lm3630_resume(struct i2c_client *client)
 {
     int rc ;
-    pr_info("%s: Neal backlight resume.\n", __func__);
+    pr_debug("%s: Neal backlight resume.\n", __func__);
 
     rc = gpio_direction_output(LM3630_ENABLE_GPIO, 1);
     if (rc)

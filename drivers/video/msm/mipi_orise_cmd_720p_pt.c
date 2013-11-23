@@ -15,11 +15,16 @@
 #include "mipi_dsi.h"
 #include "mipi_orise.h"
 #include <linux/pcb_version.h>
+#include <mach/device_info.h>
+
 
 extern int get_pcb_version(void);
 
-
 static struct msm_panel_info pinfo;
+static char *DEVICE_VERSION = "64317";
+static char *DEVICE_MANUFACUTRE	= "jdi";
+
+
 static struct mipi_dsi_phy_ctrl dsi_cmd_mode_phy_db_1080p =
 {
 
@@ -47,6 +52,12 @@ static int __init mipi_cmd_orise_720p_pt_init(void)
 {
     int ret;
 
+/* OPPO 2013-11-13 gousj Add begin for device information */
+#ifdef CONFIG_VENDOR_EDIT
+	register_device_proc("lcd", DEVICE_VERSION, DEVICE_MANUFACUTRE);
+#endif
+/* OPPO 2013-11-13 gousj Add end */
+	
     if (msm_fb_detect_client("mipi_cmd_orise_720p"))
         return 0;
     pr_info("Neal N1 mipi_cmd_orise_720p_pt_init init\n");

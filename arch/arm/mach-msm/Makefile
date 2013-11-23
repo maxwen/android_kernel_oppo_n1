@@ -379,9 +379,9 @@ endif
 
 # obj-$(CONFIG_OPPO_DEBUG_ASSERT)	+=  oppo_trace.o
 obj-y	+=  oppo_trace.o
-#ifdef VENDOR_EDIT
+#ifdef VENDOR_EDIT 
 #Wanjc@OnlineRd.Driver, 2013/10/23, Add for OPPO device info
-obj-$(CONFIG_ARCH_MSM8960)  +=  device_info.o
+obj-$(CONFIG_OPPO_DEVICE_IFNO)	+=  device_info.o
 #endif /* VENDOR_EDIT */
 obj-$(CONFIG_ARCH_MSM8960) += mdm2.o mdm_common.o
 obj-$(CONFIG_MSM_RTB) += msm_rtb.o

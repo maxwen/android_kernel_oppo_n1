@@ -302,6 +302,12 @@ int __init board_pcb_verson_init(char *s)
 		current_pcb_version_num = PCB_VERSION_DVT_N1T;
 	else if (!strcmp(s, "n1t_pvt_td"))
 		current_pcb_version_num = PCB_VERSION_PVT_N1T;
+	else if (!strcmp(s, "n1w_evt"))
+			current_pcb_version_num = PCB_VERSION_EVT_N1W;
+	else if (!strcmp(s, "n1w_dvt"))
+			current_pcb_version_num = PCB_VERSION_DVT_N1W;
+	else if (!strcmp(s, "n1w_pvt"))
+			current_pcb_version_num = PCB_VERSION_PVT_N1W;
 	/*OPPO 2013-08-23 zhangpan add end*/
 
 	return 0;
@@ -1245,8 +1251,15 @@ static struct msm_bus_scale_pdata usb_bus_scale_pdata = {
 };
 
 static int phy_init_seq[] = {
-	0x38, 0x81, /* update DC voltage level */
+/*OPPO,songxh add begain for USB Eye_Diagram ,2013-11-14*/
+#ifndef CONFIG_VENDOR_EDIT	
+	0x38, 0x81, /* update DC voltage level */	
 	0x24, 0x82, /* set pre-emphasis and rise/fall time */
+#else
+       0x33, 0x81, /* update DC voltage level */	
+       0x34, 0x82, /* set pre-emphasis and rise/fall time */
+#endif
+/*OPPO,songxh add end for USB Eye_Diagram ,2013-11-14*/
 	-1
 };
 
@@ -2455,7 +2468,7 @@ static struct mdm_vddmin_resource mdm_vddmin_rscs = {
 
 static struct gpiomux_setting mdm2ap_status_gpio_run_cfg = {
 	.func = GPIOMUX_FUNC_GPIO,
-	.drv = GPIOMUX_DRV_2MA,
+	.drv = GPIOMUX_DRV_8MA,
 	.pull = GPIOMUX_PULL_NONE,
 };
 

@@ -45,6 +45,12 @@
 
 #include "queue.h"
 
+/* OPPO 2013-11-15 songxh Add begin for device information */
+#ifdef CONFIG_VENDOR_EDIT
+#include <mach/device_info.h>
+#endif
+/* OPPO 2013-11-15 songxh Add end */
+
 MODULE_ALIAS("mmc:block");
 #ifdef MODULE_PARAM_PREFIX
 #undef MODULE_PARAM_PREFIX
@@ -2477,12 +2483,33 @@ static int mmc_blk_probe(struct mmc_card *card)
 {
 	struct mmc_blk_data *md, *part_md;
 	char cap_str[10];
-
+	char * manufacturerid; 
 	/*
 	 * Check that the card supports the command class(es) we need.
 	 */
 	if (!(card->csd.cmdclass & CCC_BLOCK_READ))
 		return -ENODEV;
+
+/* OPPO 2013-11-15 songxh Add begin for device information */
+#ifdef CONFIG_VENDOR_EDIT
+	switch (card->cid.manfid)
+	{
+		case  0x11:
+			manufacturerid = "TOSHIBA";
+			break;
+		case  0x15:
+			manufacturerid = "SAMSUNG";
+			break;
+		case  0x45:
+			manufacturerid = "SANDISK";
+			break;
+		default:
+			manufacturerid = "unknown";
+			break;
+	}
+	register_device_proc("emmc", card->cid.prod_name, manufacturerid);
+#endif
+/* OPPO 2013-11-15 songxh Add end */
 
 	md = mmc_blk_alloc(card);
 	if (IS_ERR(md))
