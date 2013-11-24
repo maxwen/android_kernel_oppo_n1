@@ -68,18 +68,12 @@ static struct resource msm_fb_resources[] =
 #define LVDS_FRC_PANEL_NAME "lvds_frc_fhd"
 #define MIPI_VIDEO_TOSHIBA_WSVGA_PANEL_NAME "mipi_video_toshiba_wsvga"
 /* OPPO 2012-07-21 zhengzk Add begin for add orise module */
-#define MIPI_VIDEO_ORISE_720P_PANEL_NAME    "mipi_video_orise_720p"
+#define MIPI_CMD_ORISE_OPPO_N1_PANEL_NAME  "mipi_cmd_orise_oppo_n1"
 /* OPPO 2012-07-21 zhengzk Add end */
 #define MIPI_VIDEO_CHIMEI_WXGA_PANEL_NAME "mipi_video_chimei_wxga"
 #define HDMI_PANEL_NAME "hdmi_msm"
 #define MHL_PANEL_NAME "hdmi_msm,mhl_8334"
 #define TVOUT_PANEL_NAME "tvout_msm"
-#define MIPI_CMD_ORISE_720P_PANEL_NAME  "mipi_cmd_orise_720p"
-
-
-/* OPPO 2012-07-21 zhengzk Add begin for MIPI speedup */
-#define MDP_SPEEDUP_FOR_MIPI
-/* OPPO 2012-07-21 zhengzk Add end */
 
 #define LVDS_PIXEL_MAP_PATTERN_1    1
 #define LVDS_PIXEL_MAP_PATTERN_2    2
@@ -106,25 +100,11 @@ static void set_mdp_clocks_for_wuxga(void);
 
 static int msm_fb_detect_panel(const char *name)
 {
-    /* OPPO 2012-07-24 zhengzk Modify for MIPI start */
-
-    if(get_pcb_version() >= PCB_VERSION_EVT_N1)
-    {
-
-        if (!strncmp(name, MIPI_CMD_ORISE_720P_PANEL_NAME,
-                     strnlen(MIPI_CMD_ORISE_720P_PANEL_NAME,
-                             PANEL_NAME_MAX_LEN)))
+    if (!strncmp(name, MIPI_CMD_ORISE_OPPO_N1_PANEL_NAME,
+                     strnlen(MIPI_CMD_ORISE_OPPO_N1_PANEL_NAME,
+                             PANEL_NAME_MAX_LEN))){
             return 0;
     }
-
-    else
-    {
-        if (!strncmp(name, MIPI_VIDEO_ORISE_720P_PANEL_NAME,
-                     strnlen(MIPI_VIDEO_ORISE_720P_PANEL_NAME,
-                             PANEL_NAME_MAX_LEN)))
-            return 0;
-    }
-
 
     if (!strncmp(name, HDMI_PANEL_NAME,
                  strnlen(HDMI_PANEL_NAME,
@@ -168,85 +148,52 @@ void __init apq8064_allocate_fb_region(void)
 
 #define MDP_VSYNC_GPIO 0
 
-static struct msm_bus_vectors mdp_init_vectors[] =
-{
-    {
-        .src = MSM_BUS_MASTER_MDP_PORT0,
-        .dst = MSM_BUS_SLAVE_EBI_CH0,
-        .ab = 0,
-        .ib = 0,
-    },
+static struct msm_bus_vectors mdp_init_vectors[] = {
+	{
+		.src = MSM_BUS_MASTER_MDP_PORT0,
+		.dst = MSM_BUS_SLAVE_EBI_CH0,
+		.ab = 0,
+		.ib = 0,
+	},
 };
 
-static struct msm_bus_vectors mdp_ui_vectors[] =
-{
-    {
-        .src = MSM_BUS_MASTER_MDP_PORT0,
-        .dst = MSM_BUS_SLAVE_EBI_CH0,
-        /* OPPO 2012-07-23 zhengzk Modify begin for improve MDP speed */
-#ifdef MDP_SPEEDUP_FOR_MIPI
-        .ab = 2000000000,
-        .ib = 2000000000,
-#else
-        .ab = 216000000 * 2,
-        .ib = 270000000 * 2,
-#endif
-        /* OPPO 2012-07-23 zhengzk Modify end */
-    },
+static struct msm_bus_vectors mdp_ui_vectors[] = {
+	{
+		.src = MSM_BUS_MASTER_MDP_PORT0,
+		.dst = MSM_BUS_SLAVE_EBI_CH0,
+		.ab = 577474560 * 2,
+		.ib = 866211840 * 2,
+	},
 };
 
-static struct msm_bus_vectors mdp_vga_vectors[] =
-{
-    /* VGA and less video */
-    {
-        .src = MSM_BUS_MASTER_MDP_PORT0,
-        .dst = MSM_BUS_SLAVE_EBI_CH0,
-        /* OPPO 2012-07-23 zhengzk Modify begin for improve MDP speed */
-#ifdef MDP_SPEEDUP_FOR_MIPI
-        .ab = 2000000000,
-        .ib = 2000000000,
-#else
-        .ab = 216000000 * 2,
-        .ib = 270000000 * 2,
-#endif
-        /* OPPO 2012-07-23 zhengzk Modify end */
-    },
+static struct msm_bus_vectors mdp_vga_vectors[] = {
+	/* VGA and less video */
+	{
+		.src = MSM_BUS_MASTER_MDP_PORT0,
+		.dst = MSM_BUS_SLAVE_EBI_CH0,
+		.ab = 605122560 * 2,
+		.ib = 756403200 * 2,
+	},
 };
 
-static struct msm_bus_vectors mdp_720p_vectors[] =
-{
-    /* 720p and less video */
-    {
-        .src = MSM_BUS_MASTER_MDP_PORT0,
-        .dst = MSM_BUS_SLAVE_EBI_CH0,
-        /* OPPO 2012-07-23 zhengzk Modify begin for improve MDP speed */
-#ifdef MDP_SPEEDUP_FOR_MIPI
-        .ab = 2000000000,
-        .ib = 2000000000,
-#else
-        .ab = 230400000 * 2,
-        .ib = 288000000 * 2,
-#endif
-        /* OPPO 2012-07-23 zhengzk Modify end */
-    },
+static struct msm_bus_vectors mdp_720p_vectors[] = {
+	/* 720p and less video */
+	{
+		.src = MSM_BUS_MASTER_MDP_PORT0,
+		.dst = MSM_BUS_SLAVE_EBI_CH0,
+		.ab = 660418560 * 2,
+		.ib = 825523200 * 2,
+	},
 };
 
-static struct msm_bus_vectors mdp_1080p_vectors[] =
-{
-    /* 1080p and less video */
-    {
-        .src = MSM_BUS_MASTER_MDP_PORT0,
-        .dst = MSM_BUS_SLAVE_EBI_CH0,
-        /* OPPO 2012-07-23 zhengzk Modify begin for improve MDP speed */
-#ifdef MDP_SPEEDUP_FOR_MIPI
-        .ab = 2000000000,
-        .ib = 2000000000,
-#else
-        .ab = 334080000 * 2,
-        .ib = 417600000 * 2,
-#endif
-        /* OPPO 2012-07-23 zhengzk Modify end */
-    },
+static struct msm_bus_vectors mdp_1080p_vectors[] = {
+	/* 1080p and less video */
+	{
+		.src = MSM_BUS_MASTER_MDP_PORT0,
+		.dst = MSM_BUS_SLAVE_EBI_CH0,
+		.ab = 764098560 * 2,
+		.ib = 955123200 * 2,
+	},
 };
 
 static struct msm_bus_paths mdp_bus_scale_usecases[] =
@@ -287,7 +234,10 @@ static struct msm_bus_scale_pdata mdp_bus_scale_pdata =
 static struct msm_panel_common_pdata mdp_pdata =
 {
     .gpio = MDP_VSYNC_GPIO,
-    .mdp_max_clk = 266667000,
+	.mdp_max_clk = 266667000,
+	.mdp_max_bw = 3080000000UL,
+	.mdp_bw_ab_factor = 200,
+	.mdp_bw_ib_factor = 210,
     .mdp_bus_scale_table = &mdp_bus_scale_pdata,
     .mdp_rev = MDP_REV_44,
 #ifdef CONFIG_MSM_MULTIMEDIA_USE_ION
@@ -296,13 +246,10 @@ static struct msm_panel_common_pdata mdp_pdata =
     .mem_hid = MEMTYPE_EBI1,
 #endif
     .mdp_iommu_split_domain = 1,
-    /* OPPO 2012-11-30 huyu modify for boot LOGO bluescreen*/
 #ifdef CONFIG_VENDOR_EDIT
-    .cont_splash_enabled = 0x01,
-    .splash_screen_addr = 0x00,
-    .splash_screen_size = 0x00,
+	/* for early backlight on for APQ8064 */
+	.cont_splash_enabled = 0x01,
 #endif
-    /* OPPO 2012-11-30 huyu modify for boot LOGO bluescreen*/
 };
 
 /* OPPO 2012-11-30 huyu modify for boot LOGO bluescreen*/

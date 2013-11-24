@@ -2644,12 +2644,6 @@ config MSM_HSIC_SYSMON_TEST
 	  can be read and written to send character data to the sysmon port of
 	  the modem over USB.
 
-# add by zhengzk start
-config FB_MSM_MIPI_BACKLIGHT_LM3528
-	bool "FB_MSM_MIPI_BACKLIGHT_LM3528"
-	default y
-# add by zhengzk end 
-
 # add by zhenwx start
 config MODEM_ERR_ENTER_RAMDUMP
 	bool "MODEM_ERR_ENTER_RAMDUMP"

@@ -781,7 +781,7 @@ static int mipi_orise_lcd_off(struct platform_device *pdev)
 static void mipi_orise_set_backlight(struct msm_fb_data_type *mfd)
 {
     lm3630_bkl_control(mfd->bl_level);
-    pr_info("%s Neal current back light = %d  wirte bcak light = %d",__func__,globle_bkl,mfd->bl_level);
+    pr_debug("%s Neal current back light = %d  wirte bcak light = %d",__func__,globle_bkl,mfd->bl_level);
     globle_bkl = mfd->bl_level;
 }
 
