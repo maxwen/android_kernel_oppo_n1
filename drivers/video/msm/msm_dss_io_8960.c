@@ -632,7 +632,6 @@ void mipi_dsi_phy_init(int panel_ndx, struct msm_panel_info const *panel_info,
 void cont_splash_clk_ctrl(int enable)
 {
 	static int cont_splash_clks_enabled;
-	pr_info("%s: %d", __func__, enable);
 	if (enable && !cont_splash_clks_enabled) {
 		if (clk_set_rate(dsi_byte_div_clk, 1) < 0)      /* divided by 1 */
 			pr_err("%s: dsi_byte_div_clk - "
@@ -640,13 +639,13 @@ void cont_splash_clk_ctrl(int enable)
 		if (clk_set_rate(dsi_esc_clk, esc_byte_ratio) < 0) /* divided by esc */
 			pr_err("%s: dsi_esc_clk - "                      /* clk ratio */
 				"clk_set_rate failed\n", __func__);
-		clk_prepare_enable(dsi_byte_div_clk);
-		clk_prepare_enable(dsi_esc_clk);
-		cont_splash_clks_enabled = 1;
+			clk_prepare_enable(dsi_byte_div_clk);
+			clk_prepare_enable(dsi_esc_clk);
+			cont_splash_clks_enabled = 1;
 	} else if (!enable && cont_splash_clks_enabled) {
-		clk_disable_unprepare(dsi_byte_div_clk);
-		clk_disable_unprepare(dsi_esc_clk);
-		cont_splash_clks_enabled = 0;
+			clk_disable_unprepare(dsi_byte_div_clk);
+			clk_disable_unprepare(dsi_esc_clk);
+			cont_splash_clks_enabled = 0;
 	}
 }
 

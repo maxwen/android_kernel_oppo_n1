@@ -585,11 +585,8 @@ int mdp4_dsi_video_on(struct platform_device *pdev)
 	struct vsycn_ctrl *vctrl;
 	struct msm_panel_info *pinfo;
 
-    pr_info("%s:", __func__);
-
 	vctrl = &vsync_ctrl_db[cndx];
 	mfd = (struct msm_fb_data_type *)platform_get_drvdata(pdev);
-	mfd->cont_splash_done = 1;
 	pinfo = &mfd->panel_info;
 
 	if (!mfd)

@@ -2760,10 +2760,10 @@ static int mdp4_calc_req_mdp_clk(struct msm_fb_data_type *mfd,
 	u32 shift = 16;
 	u64 rst;
 
-	pr_info("%s: pipe sets: panel res(x,y)=(%d,%d)\n",
+	pr_debug("%s: pipe sets: panel res(x,y)=(%d,%d)\n",
 		 __func__,  mfd->panel_info.xres, mfd->panel_info.yres);
 
-	pr_info("%s: src_h=%d, dst_h=%d, src_w=%d, dst_w=%d\n",
+	pr_debug("%s: src_h=%d, dst_h=%d, src_w=%d, dst_w=%d\n",
 		 __func__, src_h, dst_h, src_w, dst_w);
 
 	pclk = (mfd->panel_info.type == MIPI_VIDEO_PANEL ||
@@ -2776,7 +2776,7 @@ static int mdp4_calc_req_mdp_clk(struct msm_fb_data_type *mfd,
 		return mdp_max_clk;
 	}
 
-	pr_info("%s: mdp panel pixel clk is %d.\n", __func__, pclk);
+	pr_debug("%s: mdp panel pixel clk is %d.\n", __func__, pclk);
 
 	hsync = mfd->panel_info.lcdc.h_back_porch +
 		mfd->panel_info.lcdc.h_front_porch +
@@ -2796,7 +2796,7 @@ static int mdp4_calc_req_mdp_clk(struct msm_fb_data_type *mfd,
 		return mdp_max_clk;
 	}
 
-	pr_info("%s: panel hsync is %d.\n", __func__, hsync);
+	pr_debug("%s: panel hsync is %d.\n", __func__, hsync);
 
 	if (!src_h) {
 		pr_err("%s: src_h is zero!\n", __func__);
@@ -2895,8 +2895,6 @@ static int mdp4_calc_req_blt(struct msm_fb_data_type *mfd,
 {
 	int ret = 0;
 
-    pr_info("%s:", __func__);
-    
 	if (!req) {
 		pr_err("%s: req is null!\n", __func__);
 		return ret;
@@ -2940,15 +2938,15 @@ static int mdp4_calc_pipe_mdp_clk(struct msm_fb_data_type *mfd,
 		return 0;
 	}
 
-	pr_info("%s: src(w,h)(%d,%d),src(x,y)(%d,%d)\n",
+	pr_debug("%s: src(w,h)(%d,%d),src(x,y)(%d,%d)\n",
 		 __func__,  pipe->src_w, pipe->src_h, pipe->src_x, pipe->src_y);
-	pr_info("%s: dst(w,h)(%d,%d),dst(x,y)(%d,%d)\n",
+	pr_debug("%s: dst(w,h)(%d,%d),dst(x,y)(%d,%d)\n",
 		 __func__, pipe->dst_w, pipe->dst_h, pipe->dst_x, pipe->dst_y);
 
 	pipe->req_clk = mdp4_calc_req_mdp_clk
 		(mfd, pipe->src_h, pipe->dst_h, pipe->src_w, pipe->dst_w);
 
-	pr_info("%s: required mdp clk %d mixer %d pipe ndx %d\n",
+	pr_debug("%s: required mdp clk %d mixer %d pipe ndx %d\n",
 		 __func__, pipe->req_clk, pipe->mixer_num, pipe->pipe_ndx);
 
 	return 0;
@@ -3259,7 +3257,6 @@ int mdp4_overlay_mdp_pipe_req(struct mdp4_overlay_pipe *pipe,
 {
 	int ret = 0;
 
-    pr_info("%s:", __func__);
 	if (mdp4_calc_pipe_mdp_clk(mfd, pipe)) {
 		pr_err("%s unable to calc mdp pipe clk rate ret=%d\n",
 		       __func__, ret);
@@ -3515,7 +3512,6 @@ int mdp4_overlay_set(struct fb_info *info, struct mdp_overlay *req)
 	int ret, mixer;
 	struct mdp4_overlay_pipe *pipe;
 
-    pr_info("%s:", __func__);
 	if (mfd == NULL) {
 		pr_err("%s: mfd == NULL, -ENODEV\n", __func__);
 		return -ENODEV;

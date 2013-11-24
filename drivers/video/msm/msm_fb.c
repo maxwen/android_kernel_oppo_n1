@@ -319,7 +319,6 @@ static void msm_fb_set_bl_brightness(struct led_classdev *led_cdev,
 	struct msm_fb_data_type *mfd = dev_get_drvdata(led_cdev->dev->parent);
 	int bl_lvl;
 
-    pr_info("%s: %d", __func__, value);
 	/* This maps android backlight level 1 to 255 into
 	   driver backlight level bl_min to bl_max with rounding
 	   and maps backlight level 0 to 0. */
@@ -348,7 +347,6 @@ static void msm_fb_set_bl_brightness(struct led_classdev *led_cdev,
 
         down(&mfd->sem);
 	msm_fb_set_backlight(mfd, bl_lvl);
-	pr_debug("%s Neal msm_fb set back light = %d",__func__,bl_lvl);
 	up(&mfd->sem);
 }
 
