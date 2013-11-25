@@ -190,7 +190,9 @@ static int msm_get_sensor_info(
 
 	sdata = mctl->sdata;
 	D("%s: sensor_name %s\n", __func__, sdata->sensor_name);
-
+	
+	/* OPPO 2013-07-29 lanhe Modify for m9m0 sensor info start */
+    #if 0
 	memcpy(&info.name[0], sdata->sensor_name, MAX_SENSOR_NAME);
 	info.flash_enabled = sdata->flash_data->flash_type !=
 					MSM_CAMERA_FLASH_NONE;
@@ -203,7 +205,37 @@ static int msm_get_sensor_info(
 	info.actuator_enabled = sdata->actuator_info ? 1 : 0;
 	info.strobe_flash_enabled = sdata->strobe_flash_data ? 1 : 0;
 	info.ispif_supported = mctl->ispif_sdev ? 1 : 0;
-
+    #else
+	if(memcmp(sdata->sensor_name,"m9mo",4)==0)
+	{
+		memcpy(&info.name[0], sdata->sensor_name, MAX_SENSOR_NAME);
+		info.flash_enabled = true;
+		info.pxlcode = pcam->usr_fmts[0].pxlcode;
+		info.flashtype = MSM_CAMERA_FLASH_LED; /* two flash_types here? */
+		info.camera_type = sdata->camera_type;
+		/* sensor_type needed to add YUV/SOC in probing */
+		info.sensor_type = sdata->sensor_type;
+		info.mount_angle = sdata->sensor_platform_info->mount_angle;
+		info.actuator_enabled = 1;
+		info.strobe_flash_enabled = 1;
+		info.ispif_supported = mctl->ispif_sdev ? 1 : 0;
+	}else{
+		memcpy(&info.name[0], sdata->sensor_name, MAX_SENSOR_NAME);
+		info.flash_enabled = sdata->flash_data->flash_type !=
+						MSM_CAMERA_FLASH_NONE;
+		info.pxlcode = pcam->usr_fmts[0].pxlcode;
+		info.flashtype = sdata->flash_type; /* two flash_types here? */
+		info.camera_type = sdata->camera_type;
+		/* sensor_type needed to add YUV/SOC in probing */
+		info.sensor_type = sdata->sensor_type;
+		info.mount_angle = sdata->sensor_platform_info->mount_angle;
+		info.actuator_enabled = sdata->actuator_info ? 1 : 0;
+		info.strobe_flash_enabled = sdata->strobe_flash_data ? 1 : 0;
+		info.ispif_supported = mctl->ispif_sdev ? 1 : 0;
+	}
+	#endif
+	/* OPPO 2013-07-29 lanhe Modify end */
+	
 	/* copy back to user space */
 	if (copy_to_user((void *)arg,
 				&info,
@@ -648,6 +680,12 @@ static void msm_mctl_release(struct msm_cam_media_controller *p_mctl)
 	struct msm_sensor_ctrl_t *s_ctrl = get_sctrl(p_mctl->sensor_sdev);
 	struct msm_camera_sensor_info *sinfo =
 		(struct msm_camera_sensor_info *) s_ctrl->sensordata;
+
+	/* OPPO 2013-10-26 liubin Add for release repeatly cause kernel reboot start */
+	if (s_ctrl->sensor_state == MSM_SENSOR_POWER_DOWN)
+		return;
+	/* OPPO 2013-10-26 liubin Add end */
+
 	mutex_lock(&p_mctl->lock);
 	if (p_mctl->opencnt) {
 		v4l2_subdev_call(p_mctl->sensor_sdev, core, ioctl,
