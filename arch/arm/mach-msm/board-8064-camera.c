@@ -311,7 +311,9 @@ static struct msm_camera_sensor_flash_src oppo_flash_src = {
 	.flash_sr_type = MSM_CAMERA_FLASH_SRC_OPPO,
 	._fsrc.oppo_src.low_current = 200,
 	._fsrc.oppo_src.high_current = 400,
+#ifdef CONFIG_MSM_CAMERA_FLASH_SSL3252
 	._fsrc.oppo_src.led_control = &oppo_led_control,
+#endif
 };
 /* OPPO 2013-02-04 kangjian added end */
 
@@ -1087,15 +1089,10 @@ void __init apq8064_init_cam(void)
 {
 	/* for SGLTE2 platform, do not configure i2c/gpiomux gsbi4 is used for
 	 * some other purpose */
-	/* OPPO 2013-07-24 liubin Modify for N1 not configure i2c start */
-	#if 0
-	if (socinfo_get_platform_subtype() != PLATFORM_SUBTYPE_SGLTE2) {
-		msm_gpiomux_install(apq8064_cam_common_configs,
-			ARRAY_SIZE(apq8064_cam_common_configs));
-	}
-	#else
 	if (socinfo_get_platform_subtype() != PLATFORM_SUBTYPE_SGLTE2)
 	{
+/* OPPO 2013-07-24 liubin Modify for N1 not configure i2c start */
+#ifdef CONFIG_VENDOR_EDIT
 		if (get_pcb_version() >= PCB_VERSION_EVT_N1)
 		{
 			msm_gpiomux_install(apq8064_cam_common_configs_n1,
@@ -1103,12 +1100,14 @@ void __init apq8064_init_cam(void)
 		}
 		else
 		{
+#endif
 			msm_gpiomux_install(apq8064_cam_common_configs,
 				ARRAY_SIZE(apq8064_cam_common_configs));
+#ifdef CONFIG_VENDOR_EDIT
 		}
+#endif
+/* OPPO 2013-07-24 liubin Modify end */
 	}
-	#endif
-	/* OPPO 2013-07-24 liubin Modify end */
 
 	if (machine_is_apq8064_cdp()) {
 		sensor_board_info_imx074.mount_angle = 0;
@@ -1117,26 +1116,24 @@ void __init apq8064_init_cam(void)
 		sensor_board_info_imx074.mount_angle = 180;
 
 	platform_device_register(&msm_camera_server);
-	
-	/* OPPO 2013-07-24 liubin Modify for N1 not configure i2c start */
-	#if 0
-	if (socinfo_get_platform_subtype() != PLATFORM_SUBTYPE_SGLTE2)
-		platform_device_register(&msm8960_device_i2c_mux_gsbi4);
-	#else
 	if (socinfo_get_platform_subtype() != PLATFORM_SUBTYPE_SGLTE2)
 	{
+/* OPPO 2013-07-24 liubin Modify for N1 not configure i2c start */
+#ifdef CONFIG_VENDOR_EDIT
 		if (get_pcb_version() >= PCB_VERSION_EVT_N1)
 		{
 			platform_device_register(&msm8064_device_i2c_mux_gsbi7);	
 		}
 		else
 		{
+#endif
 			platform_device_register(&msm8960_device_i2c_mux_gsbi4);
+#ifdef CONFIG_VENDOR_EDIT
 		}
+#endif
+/* OPPO 2013-07-24 liubin Modify end */
 	}
-	#endif
-	/* OPPO 2013-07-24 liubin Modify end */
-	
+
 	platform_device_register(&msm8960_device_csiphy0);
 	platform_device_register(&msm8960_device_csiphy1);
 	platform_device_register(&msm8960_device_csid0);
@@ -1149,13 +1146,15 @@ void __init apq8064_init_cam(void)
 #ifdef CONFIG_I2C
 static struct i2c_board_info apq8064_camera_i2c_boardinfo[] = {
 
-	/* OPPO 2013-07-24 lanhe Add for m9mo driver start */
+/* OPPO 2013-07-24 lanhe Add for m9mo driver start */
+#ifdef CONFIG_VENDOR_EDIT
 	{	
 		I2C_BOARD_INFO("m9mo", 0x3e),
 		.platform_data = &msm_camera_sensor_m9mo_data,
 		.irq           = MSM_GPIO_TO_INT(26),
 	},
-	/* OPPO 2013-07-24 lanhe Add end */
+#endif
+/* OPPO 2013-07-24 lanhe Add end */
 	{
 	I2C_BOARD_INFO("imx074", 0x1A),
 	.platform_data = &msm_camera_sensor_imx074_data,
@@ -1179,6 +1178,7 @@ static struct i2c_board_info apq8064_camera_i2c_boardinfo[] = {
 	I2C_BOARD_INFO("imx091", 0x34),
 	.platform_data = &msm_camera_sensor_imx091_data,
 	},
+#ifdef CONFIG_VENDOR_EDIT
 	{
 	I2C_BOARD_INFO("s5k3l1yx", 0x20),
 	.platform_data = &msm_camera_sensor_s5k3l1yx_data,
@@ -1188,6 +1188,7 @@ static struct i2c_board_info apq8064_camera_i2c_boardinfo[] = {
 	I2C_BOARD_INFO("ssl3252", 0x30),
 	},
     /* OPPO 2013-02-04 kangjian added end */
+#endif
 };
 
 struct msm_camera_board_info apq8064_camera_board_info = {

@@ -11,10 +11,9 @@
 #include <linux/i2c/ssl3252.h>
 #include <linux/leds.h>
 #include <linux/gpio.h>
-#include <linux/pcb_version.h>
 
 //#define SSL3252_DEBUG 1
-#define CAMERA_FLASH_SSL3252_DEBUG
+//#define CAMERA_FLASH_SSL3252_DEBUG
 #ifdef CAMERA_FLASH_SSL3252_DEBUG
 #define CDBG_FLASH(fmt, args...) printk(KERN_INFO "ssl3252.c: " fmt, ##args) 
 #else
@@ -746,18 +745,7 @@ static struct i2c_driver ssl3252_i2c_driver = {
 /*-----------------------------------------------------------------*/
 static int __init ssl3252_init(void) 
 {
-	/* OPPO 2013-09-13 liubin Modify for N1 not use ssl3232 start */
-	#if 0
 	return i2c_add_driver(&ssl3252_i2c_driver);
-	#else
-	int rc = 0;
-	if (get_pcb_version() < PCB_VERSION_EVT_N1)
-	{
-		rc = i2c_add_driver(&ssl3252_i2c_driver);
-	}
-	return rc;
-	#endif
-	/* OPPO 2013-09-13 liubin Modify end */
 }
 
 static void __exit ssl3252_eixt(void)

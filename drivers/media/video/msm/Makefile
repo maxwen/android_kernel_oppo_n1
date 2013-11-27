@@ -20,7 +20,7 @@ ifeq ($(CONFIG_MSM_CAMERA_V4L2),y)
 else
   obj-$(CONFIG_MSM_CAMERA) += msm_camera.o
 endif
-obj-$(CONFIG_MSM_CAMERA) += oppo/
+obj-$(CONFIG_M9MO) += oppo/
 obj-$(CONFIG_MSM_CAMERA) += vfe/
 obj-$(CONFIG_MSM_CAMERA) += msm_axi_qos.o gemini/ mercury/ jpeg_10/
 obj-$(CONFIG_MSM_CAMERA_FLASH) += flash.o
@@ -61,5 +61,4 @@ obj-$(CONFIG_MT9D112) += mt9d112.o mt9d112_reg.o
 
 obj-$(CONFIG_MT9D113) += mt9d113.o mt9d113_reg.o
 obj-$(CONFIG_MSM_V4L2_VIDEO_OVERLAY_DEVICE) += msm_v4l2_video.o
-#//lanhe@oppo.com
-#obj-y += m9mo_v4l2.o
+
