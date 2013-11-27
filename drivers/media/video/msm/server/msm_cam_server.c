@@ -592,7 +592,7 @@ int msm_send_open_server(struct msm_cam_v4l2_device *pcam)
 	int idx = pcam->server_queue_idx;
 	D("%s qid %d\n", __func__, pcam->server_queue_idx);
 	ctrlcmd.type	   = MSM_V4L2_OPEN;
-	ctrlcmd.timeout_ms = 2000;//10000;
+	ctrlcmd.timeout_ms = 10000;//2000;//10000;
 	ctrlcmd.length = strnlen(
 		g_server_dev.config_info.config_dev_name[idx],
 		MAX_DEV_NAME_LEN)+1;
@@ -664,7 +664,7 @@ int msm_server_set_fmt(struct msm_cam_v4l2_device *pcam, int idx,
 	ctrlcmd.type       = MSM_V4L2_VID_CAP_TYPE;
 	ctrlcmd.length     = sizeof(struct img_plane_info);
 	ctrlcmd.value      = (void *)&plane_info;
-	ctrlcmd.timeout_ms = 2000;//10000;
+	ctrlcmd.timeout_ms = 10000;//2000;//10000;
 	ctrlcmd.vnode_id   = pcam->vnode_id;
 	ctrlcmd.queue_idx = pcam->server_queue_idx;
 	ctrlcmd.config_ident = g_server_dev.config_info.config_dev_id[0];
@@ -731,7 +731,7 @@ int msm_server_set_fmt_mplane(struct msm_cam_v4l2_device *pcam, int idx,
 	ctrlcmd.type       = MSM_V4L2_VID_CAP_TYPE;
 	ctrlcmd.length     = sizeof(struct img_plane_info);
 	ctrlcmd.value      = (void *)&plane_info;
-	ctrlcmd.timeout_ms = 2000;//10000;
+	ctrlcmd.timeout_ms = 10000;//2000;//10000;
 	ctrlcmd.vnode_id   = pcam->vnode_id;
 	ctrlcmd.queue_idx = pcam->server_queue_idx;
 
@@ -778,7 +778,7 @@ int msm_server_streamoff(struct msm_cam_v4l2_device *pcam, int idx)
 
 	D("%s, pcam = 0x%x\n", __func__, (u32)pcam);
 	ctrlcmd.type        = MSM_V4L2_STREAM_OFF;
-	ctrlcmd.timeout_ms  = 2000;//10000;
+	ctrlcmd.timeout_ms  = 10000;//2000;//10000;
 	ctrlcmd.length      = 0;
 	ctrlcmd.value       = NULL;
 	ctrlcmd.stream_type = pcam->dev_inst[idx]->image_mode;
@@ -1825,6 +1825,27 @@ static void msm_cam_server_subdev_notify(struct v4l2_subdev *sd,
 		if (p_mctl && p_mctl->isp_notify && p_mctl->vfe_sdev)
 			rc = p_mctl->isp_notify(p_mctl,
 				p_mctl->vfe_sdev, notification, arg);
+		
+		/* OPPO 2013-07-29 lanhe Add for m9m0 caf start */
+		if(notification == NOTIFY_VFE_PIX_SOF_COUNT)
+		{
+			struct sensor_cfg_data cfgarg;
+			cfgarg.cfgtype = CFG_FRAME_NOTIFICATION;
+			if (p_mctl && p_mctl->sensor_sdev)
+			    v4l2_subdev_call(p_mctl->sensor_sdev, core, ioctl,
+				VIDIOC_MSM_SENSOR_CFG, &cfgarg);
+			
+		}
+		
+		if (p_mctl && p_mctl->vfe_output_mode == VFE_OUTPUTS_MAIN_AND_THUMB)
+		{
+			if (NOTIFY_VFE_MSG_OUT == notification)
+			{
+				printk("%s: capture stream output \r\n", __func__);
+			}
+		}
+		/* OPPO 2013-07-29 lanhe Add end */
+		
 		break;
 	case NOTIFY_VFE_IRQ:{
 		struct msm_vfe_cfg_cmd cfg_cmd;
